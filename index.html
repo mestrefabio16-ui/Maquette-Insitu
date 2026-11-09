@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Maquette feuilletable du livret A5 Atelier bois In Situ (textes fictifs).">
+<meta property="og:title" content="Livret In Situ — maquette">
+<meta property="og:description" content="Maquette feuilletable du livret A5 de 4 pages, textes fictifs.">
+<meta property="og:image" content="apercu.jpg">
+<meta name="robots" content="noindex">
+<title>Livret In Situ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap">
+<style>
+  /* Layout : une scène centrée, le livret A5 en double page, feuilletage 3D par feuillets */
+  :root{
+    --bg:#ECE6DF; --bg2:#E0D6CC; --fg:#3A3A3A; --muted:#7A6C63;
+    --terre:#A07864; --vert:#50B48C; --anthra:#464646; --btn-bg:#ffffff; --btn-fg:#464646;
+    --display:'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+    --body:Inter, 'Helvetica Neue', Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+    --bg:#2B2928; --bg2:#22201F; --fg:#EEE8E2; --muted:#B5A79D; --btn-bg:#3A3736; --btn-fg:#EEE8E2; color-scheme:dark } }
+  :root[data-theme="dark"]{ --bg:#2B2928; --bg2:#22201F; --fg:#EEE8E2; --muted:#B5A79D; --btn-bg:#3A3736; --btn-fg:#EEE8E2; color-scheme:dark }
+
+  html,body{height:100%}
+  body{background:radial-gradient(ellipse at 50% 40%, var(--bg) 0%, var(--bg2) 100%); background-color:var(--bg); color:var(--fg); font-family:var(--body);
+    display:flex; flex-direction:column; overflow-x:hidden;
+    padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); }
+  header{display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:12px; padding-block:22px 8px; max-width:1100px; width:100%; margin:0 auto}
+  header small{display:block; font-size:11px; letter-spacing:.26em; font-weight:700; text-transform:uppercase; color:var(--terre)}
+  header h1{font-family:var(--display); font-weight:400; font-size:clamp(30px,5vw,44px); line-height:1; letter-spacing:.01em; text-wrap:balance}
+  .badge{background:var(--vert); color:#fff; font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; padding:9px 14px; white-space:nowrap}
+
+  .stage{flex:1; display:flex; align-items:center; justify-content:center; min-height:0; padding-block:10px; perspective:2600px}
+  .book{position:relative; width:calc(var(--pw) * 2); height:var(--ph); transition:transform .8s cubic-bezier(.6,.05,.25,1); transform-style:preserve-3d}
+  .leaf{position:absolute; left:50%; top:0; width:var(--pw); height:100%; transform-origin:left center; transform-style:preserve-3d;
+    transition:transform .9s cubic-bezier(.55,.05,.25,1); cursor:pointer}
+  .leaf.flipped{transform:rotateY(-180deg)}
+  .face{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden; background:#fff;
+    box-shadow:0 18px 40px rgba(40,30,25,.28), 0 2px 6px rgba(0,0,0,.15)}
+  .face img{width:100%; height:100%; display:block; user-select:none; -webkit-user-drag:none}
+  .face.back{transform:rotateY(180deg)}
+  /* ombre de pli */
+  .face.front::after{content:""; position:absolute; inset:0; background:linear-gradient(90deg, rgba(0,0,0,.22) 0%, rgba(0,0,0,0) 7%)}
+  .face.back::after{content:""; position:absolute; inset:0; background:linear-gradient(270deg, rgba(0,0,0,.22) 0%, rgba(0,0,0,0) 7%)}
+  .leaf.cover .face.front::after{background:linear-gradient(90deg, rgba(0,0,0,.12) 0%, rgba(0,0,0,0) 3%)}
+
+  .controls{display:flex; align-items:center; justify-content:center; gap:14px; padding-block:6px 10px}
+  .controls button{font:600 14px var(--body); background:var(--btn-bg); color:var(--btn-fg); border:1px solid rgba(70,70,70,.18); padding:10px 16px; cursor:pointer; min-width:44px}
+  .controls button:hover:not(:disabled){border-color:var(--terre); color:var(--terre)}
+  .controls button:focus-visible{outline:2px solid var(--vert); outline-offset:2px}
+  .controls button:disabled{opacity:.35; cursor:default}
+  .count{font:400 22px var(--display); letter-spacing:.06em; min-width:110px; text-align:center; font-variant-numeric:tabular-nums}
+  .dots{display:flex; gap:8px; justify-content:center; padding-bottom:6px}
+  .dots button{width:9px; height:9px; border-radius:50%; border:0; padding:0; background:var(--muted); opacity:.35; cursor:pointer}
+  .dots button.on{background:var(--vert); opacity:1}
+  footer{font-size:12px; color:var(--muted); text-align:center; padding-block:6px 18px; line-height:1.5; max-width:70ch; margin:0 auto}
+  footer b{color:var(--fg)}
+  @media (prefers-reduced-motion: reduce){ .book,.leaf{transition:none} }
+</style>
+</head>
+<body>
+
+<header>
+  <div><small>Livret A5 · 4 pages · à feuilleter</small><h1>Atelier bois In Situ</h1></div>
+  <div class="badge">● Maquette · textes fictifs</div>
+</header>
+
+<main class="stage" id="stage">
+  <div class="book" id="book">
+    <div class="leaf cover" data-i="0">
+      <div class="face front"><img src="pages/page-1.jpg" alt="Page 1 · couverture"></div>
+      <div class="face back"><img src="pages/page-2.jpg" alt="Page 2 · le projet"></div>
+    </div>
+    <div class="leaf" data-i="1">
+      <div class="face front"><img src="pages/page-3.jpg" alt="Page 3 · la démarche"></div>
+      <div class="face back"><img src="pages/page-4.jpg" alt="Page 4 · dos"></div>
+    </div>
+  </div>
+</main>
+
+<nav class="controls" aria-label="Navigation du livret">
+  <button id="prev" aria-label="Page précédente">←</button>
+  <span class="count" id="count">Couverture</span>
+  <button id="next" aria-label="Page suivante">→</button>
+</nav>
+<div class="dots" id="dots"></div>
+<footer>Cliquez sur une page, utilisez les flèches du clavier ou balayez pour tourner les pages.<br><b>Maquette non contractuelle</b> · format fermé 148 × 210 mm · palette 3B Emballages<br><a href="livret-maquette.pdf" style="color:inherit">Télécharger le PDF de la maquette</a></footer>
+
+<script>
+(function(){
+  var book=document.getElementById('book'), stage=document.getElementById('stage');
+  var leaves=[].slice.call(document.querySelectorAll('.leaf'));
+  var n=0, N=leaves.length; // n = nombre de feuillets tournés (0..N)
+  var labels=['Couverture','Pages 2 – 3','Dos'];
+  var dots=document.getElementById('dots');
+  labels.forEach(function(l,i){ var b=document.createElement('button'); b.setAttribute('aria-label',l); b.onclick=function(){go(i)}; dots.appendChild(b); });
+
+  function size(){
+    var maxW=stage.clientWidth, maxH=stage.clientHeight - 10;
+    var ratio=210/148;
+    // largeur dispo pour 2 pages ; sur téléphone on garde quand même la double page
+    var pw=Math.min(maxW/2 - 4, maxH/ratio, 520);
+    pw=Math.max(120, Math.floor(pw));
+    book.style.setProperty('--pw', pw+'px'); book.style.setProperty('--ph', Math.round(pw*ratio)+'px');
+    // fermé : on centre la page seule
+    var shift = n===0 ? -pw/2 : (n===N ? pw/2 : 0);
+    book.style.transform='translateX('+shift+'px)';
+  }
+  function render(){
+    leaves.forEach(function(l,i){
+      var f=i<n; l.classList.toggle('flipped',f);
+      l.style.zIndex = f ? (i+1) : (N-i+1);
+    });
+    document.getElementById('prev').disabled = n===0;
+    document.getElementById('next').disabled = n===N;
+    document.getElementById('count').textContent=labels[n];
+    [].forEach.call(dots.children,function(d,i){ d.classList.toggle('on',i===n) });
+    size();
+  }
+  function go(k){ n=Math.max(0,Math.min(N,k)); render(); }
+  leaves.forEach(function(l,i){ l.addEventListener('click',function(){ go(l.classList.contains('flipped') ? i : i+1); }); });
+  document.getElementById('prev').onclick=function(){go(n-1)};
+  document.getElementById('next').onclick=function(){go(n+1)};
+  document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight')go(n+1); if(e.key==='ArrowLeft')go(n-1); });
+  var x0=null;
+  stage.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
+  stage.addEventListener('touchend',function(e){ if(x0===null)return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40) go(n+(dx<0?1:-1)); x0=null; });
+  window.addEventListener('resize',size);
+  render();
+})();
+</script>
+</body>
+</html>
